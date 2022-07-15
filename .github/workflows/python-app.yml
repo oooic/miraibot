@@ -31,5 +31,8 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
+      env:
+        WEB_HOOK_URL: ${{ secrets.WEB_HOOK_URL }}
+        SSH_CONFIG: ${{ secrets.CONFIG }}
       run: |
         python bot.py
