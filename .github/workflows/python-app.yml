@@ -33,6 +33,3 @@ jobs:
     - name: Test with pytest
       run: |
         python bot.py
-    - name: Debug
-      if: ${{ always() }}
-      uses: mxschmitt/action-tmate@v3
