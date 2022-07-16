@@ -45,7 +45,6 @@ def get_output(command: str) -> None:
     ) as interact:
         interact.send("")
         interact.expect(PROMPT)
-        txt = ""
 
         interact.send(command)
         interact.expect(PROMPT)
@@ -68,10 +67,10 @@ def my_update():
             mirai_last = f.read()
 
     with open("mirai.txt", "w") as f:
-        f.write(mirai)
+        f.write(my_mirai)
 
-    if mirai != mirai_last:
-        post_slack(mirai)
+    if my_mirai != mirai_last:
+        post_slack(my_mirai)
 
 
 def memory_usage():
@@ -79,7 +78,7 @@ def memory_usage():
     df = pd.read_csv(
         StringIO(qhost),
         skiprows=3,
-        sep="\s+",
+        sep="\s+",  # noqa: W605
         names=[
             "node",
             "os",
@@ -97,7 +96,7 @@ def memory_usage():
             df[mem].str.replace("M", "e3").str.replace("G", "e6").astype(float)
         )
 
-    df.used_mem / df.max_mem > 0.9
+    # df.used_mem / df.max_mem > 0.9
 
     high_memory = df[df.used_mem / df.max_mem > 0.7]
 
@@ -105,7 +104,7 @@ def memory_usage():
 
     df_qstat = pd.read_csv(
         StringIO(qstat),
-        sep="\s+",
+        sep="\s+",  # noqa: W605
         names=[
             "jobID",
             "prior",
@@ -125,7 +124,7 @@ def memory_usage():
 
     msg = ""
     for _, row in merged_df.iterrows():
-        f"@{row.name}\nJOB ID{row.jobID}"
+        msg += f"@{row.name}\nJOB ID{row.jobID}"
 
 
 def main():
