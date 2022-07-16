@@ -2,3 +2,4 @@ requests
 paramiko
 paramiko_expect
 pandas
+slack-sdk
