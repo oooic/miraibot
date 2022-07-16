@@ -23,6 +23,7 @@ jobs:
       with:
         path: |
           ~/mirai.txt
+        key: mirai_txt
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
