@@ -75,6 +75,7 @@ def my_update():
 
 def memory_usage():
     qhost = get_output("/usr/sge/bin/linux-x64/qhost")
+    print(qhost)
     df = pd.read_csv(
         StringIO(qhost),
         skiprows=3,
@@ -98,7 +99,9 @@ def memory_usage():
 
     # df.used_mem / df.max_mem > 0.9
 
-    high_memory = df[df.used_mem / df.max_mem > 0.7]
+    df['memory_usage'] = df.used_mem / df.max_mem * 100
+
+    high_memory = df[df.memory_usage > 70]
 
     qstat = get_output("/usr/sge/bin/linux-x64/qstat | tail -n +3")
 
@@ -124,12 +127,13 @@ def memory_usage():
 
     msg = ""
     for _, row in merged_df.iterrows():
-        msg += f"@{row.name}\nJOB ID{row.jobID}"
+        msg += f"@{row.name}\nJOB {row.jobID} running on {row.queue}\n consumes {row.memory_usage:.3g}% of the total memory\n"
 
+    post_slack(msg)
 
 def main():
     my_update()
-
+    memory_usage()
 
 if __name__ == "__main__":
     main()
