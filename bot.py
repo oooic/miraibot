@@ -2,7 +2,7 @@ import json
 import os
 import socket
 from io import StringIO
-
+from slack_sdk.web import WebClient
 import pandas as pd
 import paramiko
 import requests
@@ -18,8 +18,13 @@ machine = os.environ["SSH_MACHINE"]
 
 
 def post_lab_slack(text: str) -> None:
-    web_client = WebClient(token=os.environ['LAB_TOKEN'])
-    web_client.chat_postMessage(text=text, channel=os.environ['LAB_CHANNEL'], username="stat bot mirai", icon_emoji=":ssh-mirai:")
+    web_client = WebClient(token=os.environ["LAB_TOKEN"])
+    web_client.chat_postMessage(
+        text=text,
+        channel=os.environ["LAB_CHANNEL"],
+        username="stat bot mirai",
+        icon_emoji=":ssh-mirai:",
+    )
 
 
 def post_slack(text: str) -> None:
@@ -71,6 +76,7 @@ def lab_update():
 
     if mirai != mirai_last:
         post_slack(mirai)
+
 
 def my_update():
     cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "LowPri"]
@@ -155,6 +161,7 @@ def memory_usage():
 def main():
     my_update()
     memory_usage()
+    lab_update()
 
 
 if __name__ == "__main__":
