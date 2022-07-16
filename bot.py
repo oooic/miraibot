@@ -99,7 +99,7 @@ def memory_usage():
 
     # df.used_mem / df.max_mem > 0.9
 
-    df['memory_usage'] = df.used_mem / df.max_mem * 100
+    df["memory_usage"] = df.used_mem / df.max_mem * 100
 
     high_memory = df[df.memory_usage > 70]
 
@@ -127,13 +127,16 @@ def memory_usage():
 
     msg = ""
     for _, row in merged_df.iterrows():
-        msg += f"@{row.name}\nJOB {row.jobID} running on {row.queue}\n consumes {row.memory_usage:.3g}% of the total memory\n"
+        msg += f"@{row.name}\nJOB {row.jobID} running on {row.queue}"
+        msg += f"consumes {row.memory_usage:.3g}% of the total memory\n"
 
     post_slack(msg)
+
 
 def main():
     my_update()
     memory_usage()
+
 
 if __name__ == "__main__":
     main()
