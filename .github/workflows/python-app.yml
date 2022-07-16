@@ -46,6 +46,8 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run
       env:
+        LAB_TOKEN: ${{ secrets.LAB_TOKEN }}
+        LAB_CHANNEL: ${{ secrets.LAB_CHANNEL }}
         WEB_HOOK_URL: ${{ secrets.WEB_HOOK_URL }}
         SSH_CONFIG: ${{ secrets.CONFIG }}
         SSH_USER: ${{ secrets.SSH_USER }}
