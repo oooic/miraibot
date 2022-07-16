@@ -127,8 +127,9 @@ def memory_usage():
 
     msg = ""
     for _, row in merged_df.iterrows():
-        msg += f"@{row.name}\nJOB {row.jobID} running on {row.queue}"
-        msg += f"consumes {row.memory_usage:.3g}% of the total memory\n"
+        msg += f"@{row.name}\n{row.queue}のジョブ#{row.jobID}が"
+        msg += f"{row.memory_usage:.3g}%ものメモリを消費してしまっています。"
+        msg += "低速化やクラッシュの恐れがあります。\n"
 
     post_slack(msg)
 
