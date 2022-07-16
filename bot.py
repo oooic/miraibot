@@ -17,6 +17,11 @@ host = os.environ["SSH_GATEWAY_HOST"]
 machine = os.environ["SSH_MACHINE"]
 
 
+def post_lab_slack(text: str) -> None:
+    web_client = WebClient(token=os.environ['LAB_TOKEN'])
+    web_client.chat_postMessage(text=text, channel=os.environ['LAB_CHANNEL'], username="stat bot mirai", icon_emoji=":ssh-mirai:")
+
+
 def post_slack(text: str) -> None:
     WEB_HOOK_URL = os.environ["WEB_HOOK_URL"]
     requests.post(
@@ -54,6 +59,19 @@ def get_output(command: str) -> None:
         return output
 
 
+def lab_update():
+    mirai = get_output("/usr/sge/bin/linux-x64/qstat")
+    mirai_last = ""
+    if os.path.exists("mirai.txt"):
+        with open("mirai.txt") as f:
+            mirai_last = f.read()
+
+    with open("mirai.txt", "w") as f:
+        f.write(mirai)
+
+    if mirai != mirai_last:
+        post_slack(mirai)
+
 def my_update():
     cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "LowPri"]
     cmd = " ".join(cmd)
@@ -63,11 +81,11 @@ def my_update():
     my_mirai = "`mirai updates:`\n```\n" + my_mirai + "```\n"
 
     mirai_last = ""
-    if os.path.exists("mirai.txt"):
-        with open("mirai.txt") as f:
+    if os.path.exists("my_mirai.txt"):
+        with open("my_mirai.txt") as f:
             mirai_last = f.read()
 
-    with open("mirai.txt", "w") as f:
+    with open("my_mirai.txt", "w") as f:
         f.write(my_mirai)
 
     if my_mirai != mirai_last:

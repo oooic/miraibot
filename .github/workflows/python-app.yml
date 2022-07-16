@@ -26,6 +26,12 @@ jobs:
         path: |
           mirai.txt
         key: mirai_txt
+    - name: Cache txt
+      uses: actions/cache@v3
+      with:
+        path: |
+          my_mirai.txt
+        key: my_mirai_txt
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
