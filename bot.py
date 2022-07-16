@@ -66,6 +66,7 @@ def get_output(command: str) -> None:
 
 def lab_update():
     mirai = get_output("/usr/sge/bin/linux-x64/qstat")
+    mirai = f"**mirai**\n```\n{mirai}\n```"
     mirai_last = ""
     if os.path.exists("mirai.txt"):
         with open("mirai.txt") as f:
