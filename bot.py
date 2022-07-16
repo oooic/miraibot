@@ -76,7 +76,6 @@ def my_update():
 
 def memory_usage():
     qhost = get_output("/usr/sge/bin/linux-x64/qhost")
-    print(qhost)
     df = pd.read_csv(
         StringIO(qhost),
         skiprows=3,
@@ -102,7 +101,7 @@ def memory_usage():
 
     df["MEMUSE"] = df.used_mem / df.max_mem * 100
 
-    high_memory = df[df["MEMUSE"] > 70]
+    high_memory = df[df["MEMUSE"] > 95]
 
     qstat = get_output("/usr/sge/bin/linux-x64/qstat | tail -n +3")
 
