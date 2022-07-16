@@ -100,9 +100,9 @@ def memory_usage():
 
     # df.used_mem / df.max_mem > 0.9
 
-    df["memory_usage"] = df.used_mem / df.max_mem * 100
+    df["MEMUSE"] = df.used_mem / df.max_mem * 100
 
-    high_memory = df[df.memory_usage > 70]
+    high_memory = df[df["MEMUSE"] > 70]
 
     qstat = get_output("/usr/sge/bin/linux-x64/qstat | tail -n +3")
 
