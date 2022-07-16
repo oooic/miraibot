@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "miraibot"
+version = "0.1.0"
+description = ""
+authors = ["Koki Muraoka <muraok_k@chemsys.t.u-tokyo.ac.jp>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+requests = "^2.28.1"
+paramiko = "^2.11.0"
+paramiko-expect = "^0.3.2"
+pandas = "^1.4.3"
+
+[tool.poetry.dev-dependencies]
+pysen = "^0.10.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pysen]
+version = "0.10"
+
+[tool.pysen.lint]
+enable_black = true
+enable_flake8 = true
+enable_isort = true
+enable_mypy = true
+mypy_preset = "strict"
+line_length = 88
+py_version = "py38"
+[[tool.pysen.lint.mypy_targets]]
+  paths = ["."]
