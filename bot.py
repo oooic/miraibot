@@ -49,7 +49,7 @@ def get_ito_nakayamalab_from_client(interact, rg):
 
 def check_loop():
     ssh_config = paramiko.SSHConfig()
-    ssh_config.parse(os.environ['SSH_CONFIG'])
+    ssh_config.from_text(os.environ['SSH_CONFIG'])
     config = ssh_config.lookup("mirai")
 
     with paramiko.SSHClient() as client:
