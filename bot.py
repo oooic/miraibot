@@ -49,8 +49,9 @@ def get_output(command: str) -> None:
         interact.send(command)
         interact.expect(PROMPT)
 
-        mirai = interact.current_output
-        return mirai
+        output = interact.current_output
+        output = "\n".join(output.split("\n")[1:-1])
+        return output
 
 
 def my_update():
