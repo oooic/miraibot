@@ -4,9 +4,15 @@ import socket
 import requests
 import json
 import os
+from paramiko_expect import SSHClientInteraction
 
 PROMPT = "(\([\-0-9A-z_]+\)\s)?~\s>\s"  # noqa: W605
 
+
+user = os.environ['SSH_USER']
+
+host = os.environ['SSH_GATEWAY_HOST']
+machine = os.environ['SSH_MACHINE']
 
 
 def post_slack(text):
@@ -39,56 +45,44 @@ def get_output(cmd, shell=False):
     return out
 
 
-def get_ito_nakayamalab_from_client(interact, rg):
-
-    interact.send(cmd)
-    interact.expect(PROMPT)
-    return get_nakayamalab_info(interact.current_output)
-
-
-
 def check_loop():
-    ssh_config = paramiko.SSHConfig()
-    ssh_config.from_text(os.environ['SSH_CONFIG'])
-    config = ssh_config.lookup("mirai")
 
-    with paramiko.SSHClient() as client:
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-
-        client.connect(
-             config['hostname'],
-            username=config['user'],
-            key_filename=config['identityfile'],
-            timeout=15.0
-        )
+    proxy = paramiko.ProxyCommand(f"ssh {user}@{host} -p 22 nc {machine} 22")
+    client = paramiko.SSHClient()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+    client.connect(
+        machine,
+        port=22,
+        username=user,
+        sock=proxy
+    )
 
 
-        with SSHClientInteraction(client, timeout=10, display=True, output_callback=output, tty_width=250) as interact:
-            interact.send("")
-            interact.expect(PROMPT)
-            txt = ""
+    with SSHClientInteraction(client, timeout=10, display=True, tty_width=250) as interact:
+        interact.send("")
+        interact.expect(PROMPT)
+        txt = ""
 
-            cmd = ["/usr/sge/bin/linux-x64/qstat",  "-u", config['user'], "|", "grep", "-v", "LowPri"]
-            cmd = " ".join(cmd)
+        cmd = ["/usr/sge/bin/linux-x64/qstat",  "-u", user, "|", "grep", "-v", "LowPri"]
+        cmd = " ".join(cmd)
 
-            interact.send(cmd)
-            interact.expect(PROMPT)
+        interact.send(cmd)
+        interact.expect(PROMPT)
 
-            mirai = interact.current_output
+        mirai = interact.current_output
 
-            mirai = "`mirai updates:`\n```\n" + mirai + "```\n"
+        mirai = "`mirai updates:`\n```\n" + mirai + "```\n"
 
-            mirai_last = ""
-            if os.path.exists("mirai.txt"):
-                with open("mirai.txt") as f:
-                    mirai_last = f.read()
+        mirai_last = ""
+        if os.path.exists("mirai.txt"):
+            with open("mirai.txt") as f:
+                mirai_last = f.read()
 
-            with open("mirai.txt", "w") as f:
-                f.write(mirai)
+        with open("mirai.txt", "w") as f:
+            f.write(mirai)
 
-            if mirai != mirai_last:
-                post_slack(mirai)
+        if mirai != mirai_last:
+            post_slack(mirai)
 
 if __name__ == "__main__":
     check_loop()
