@@ -34,5 +34,8 @@ jobs:
       env:
         WEB_HOOK_URL: ${{ secrets.WEB_HOOK_URL }}
         SSH_CONFIG: ${{ secrets.CONFIG }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_MACHINE: ${{ secrets.SSH_MACHINE }}
+        SSH_GATEWAY_HOST: ${{ secrets.SSH_GATEWAY_HOST }}
       run: |
         python bot.py
