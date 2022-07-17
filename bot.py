@@ -2,11 +2,12 @@ import json
 import os
 import socket
 from io import StringIO
-from slack_sdk.web import WebClient
+
 import pandas as pd
 import paramiko
 import requests
 from paramiko_expect import SSHClientInteraction
+from slack_sdk.web import WebClient
 
 PROMPT = "(\([\-0-9A-z_]+\)\s)?~\s>\s"  # noqa: W605
 
@@ -77,6 +78,7 @@ def lab_update():
 
     if mirai != mirai_last:
         post_slack(mirai)
+        post_lab_slack(mirai)
 
 
 def my_update():
@@ -126,7 +128,7 @@ def memory_usage():
 
     df["MEMUSE"] = df.used_mem / df.max_mem * 100
 
-    high_memory = df[df["MEMUSE"] > 95]
+    high_memory = df[df["MEMUSE"] > 50]
 
     qstat = get_output("/usr/sge/bin/linux-x64/qstat | tail -n +3")
 
@@ -150,13 +152,26 @@ def memory_usage():
 
     merged_df = high_memory.merge(df_qstat, how="inner")
 
-    msg = ""
-    for _, row in merged_df.iterrows():
-        msg += f"@{row.user}\n:warning: {row.queue}のジョブ#{row.jobID}が"
-        msg += f"{row.MEMUSE:.3g}%ものメモリを消費してしまっています。"
-        msg += "低速化やクラッシュの恐れがあります。\n"
+    if len(merged_df) > 0:
+        msg = ""
+        for _, row in merged_df.iterrows():
+            msg += f"@{row.user}\n:warning: {row.queue}のジョブ#{row.jobID}が"
+            msg += f"{row.MEMUSE:.3g}%ものメモリを消費してしまっています。"
+            msg += "低速化やクラッシュの恐れがあります。\n"
 
-    post_slack(msg)
+        post_slack(msg)
+
+    df["free_cpus"] = df.load - df.cores
+    df_overcpu = df[df.free_cpus > 0]
+
+    df_overcpu = df_overcpu.merge(df_qstat, how="inner")
+
+    if len(df_overcpu) > 0:
+        msg = ""
+        for _, row in df_overcpu.iterrows():
+            msg += f"@{row.user}\n:warning: {row.queue}のジョブ#{row.jobID}が"
+            msg += "割り当てコア数以上のCPUを消費しています。"
+            msg += "並列化の問題か、ゾンビプロセスの存在の可能性があります。\n"
 
 
 def main():
