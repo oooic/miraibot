@@ -161,7 +161,7 @@ def memory_usage():
             msg += "低速化やクラッシュの恐れがあります。\n"
             msg += "よりメモリの大きなノードを使用しましょう。\n"
 
-        post_slack(msg)
+        # post_slack(msg)
         post_lab_slack(msg)
 
     df["free_cpus"] = df.load - df.cores
@@ -176,12 +176,12 @@ def memory_usage():
             msg += "割り当てコア数以上のCPUを消費しています。"
             msg += "並列化の問題か、ゾンビプロセスの存在の可能性があります。\n"
 
-        post_slack(msg)
+        # post_slack(msg)
         post_lab_slack(msg)
 
 
 def main():
-    my_update()
+    # my_update()
     memory_usage()
     lab_update()
 
