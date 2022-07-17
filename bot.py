@@ -158,8 +158,10 @@ def memory_usage():
             msg += f"@{row.user}\n:warning: {row.queue}のジョブ#{row.jobID}が"
             msg += f"{row.MEMUSE:.3g}%ものメモリを消費してしまっています。"
             msg += "低速化やクラッシュの恐れがあります。\n"
+            msg += "よりメモリの大きなノードを使用しましょう。\n"
 
         post_slack(msg)
+        post_lab_slack(msg)
 
     df["free_cpus"] = df.load - df.cores
     df_overcpu = df[df.free_cpus > 1]
@@ -174,6 +176,7 @@ def memory_usage():
             msg += "並列化の問題か、ゾンビプロセスの存在の可能性があります。\n"
 
         post_slack(msg)
+        post_lab_slack(msg)
 
 
 def main():
