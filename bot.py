@@ -103,6 +103,7 @@ def my_update():
 
 def memory_usage():
     qhost = get_output("/usr/sge/bin/linux-x64/qhost")
+    post_lab_slack(qhost)
     df = pd.read_csv(
         StringIO(qhost),
         skiprows=3,
@@ -182,7 +183,7 @@ def memory_usage():
 def main():
     my_update()
     memory_usage()
-    # lab_update()
+    lab_update()
 
 
 if __name__ == "__main__":
