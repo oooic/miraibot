@@ -103,7 +103,7 @@ def my_update():
 
 def memory_usage():
     qhost = get_output("/usr/sge/bin/linux-x64/qhost")
-    post_lab_slack(qhost)
+    post_lab_slack(f"```\n{qhost}\n```\n")
     df = pd.read_csv(
         StringIO(qhost),
         skiprows=3,
