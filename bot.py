@@ -77,7 +77,7 @@ def lab_update():
         f.write(mirai)
 
     if mirai != mirai_last:
-        post_slack(mirai)
+        # post_slack(mirai)
         post_lab_slack(mirai)
 
 
@@ -128,7 +128,7 @@ def memory_usage():
 
     df["MEMUSE"] = df.used_mem / df.max_mem * 100
 
-    high_memory = df[df["MEMUSE"] > 50]
+    high_memory = df[df["MEMUSE"] > 95]
 
     qstat = get_output("/usr/sge/bin/linux-x64/qstat | tail -n +3")
 
@@ -179,7 +179,7 @@ def memory_usage():
 def main():
     my_update()
     memory_usage()
-    lab_update()
+    # lab_update()
 
 
 if __name__ == "__main__":
