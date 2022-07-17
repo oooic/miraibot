@@ -162,7 +162,7 @@ def memory_usage():
         post_slack(msg)
 
     df["free_cpus"] = df.load - df.cores
-    df_overcpu = df[df.free_cpus > 0]
+    df_overcpu = df[df.free_cpus > -5]
 
     df_overcpu = df_overcpu.merge(df_qstat, how="inner")
 
