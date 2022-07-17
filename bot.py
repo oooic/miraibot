@@ -162,7 +162,7 @@ def memory_usage():
         post_slack(msg)
 
     df["free_cpus"] = df.load - df.cores
-    df_overcpu = df[df.free_cpus > -5]
+    df_overcpu = df[df.free_cpus > 1]
 
     df_overcpu = df_overcpu.merge(df_qstat, how="inner")
 
@@ -172,6 +172,8 @@ def memory_usage():
             msg += f"@{row.user}\n:warning: {row.queue}のジョブ#{row.jobID}が"
             msg += "割り当てコア数以上のCPUを消費しています。"
             msg += "並列化の問題か、ゾンビプロセスの存在の可能性があります。\n"
+
+        post_slack(msg)
 
 
 def main():
