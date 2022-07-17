@@ -82,7 +82,7 @@ def lab_update():
 
 
 def my_update():
-    cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "LowPri"]
+    cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "compute-3-1"]
     cmd = " ".join(cmd)
 
     my_mirai = get_output(cmd)
