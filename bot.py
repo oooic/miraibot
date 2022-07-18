@@ -18,6 +18,10 @@ host = os.environ["SSH_GATEWAY_HOST"]
 machine = os.environ["SSH_MACHINE"]
 
 
+def check_date():
+    pass
+
+
 def post_lab_slack(text: str) -> None:
     web_client = WebClient(token=os.environ["LAB_TOKEN"])
     web_client.chat_postMessage(
@@ -51,7 +55,10 @@ def get_interaction():
     def output(x):
         return None
 
-    return SSHClientInteraction(client, timeout=10, display=True, output_callback=output, tty_width=250)
+    return SSHClientInteraction(
+        client, timeout=10, display=True, output_callback=output, tty_width=250
+    )
+
 
 def get_output(command: str) -> None:
 
