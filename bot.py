@@ -131,7 +131,6 @@ def get_interaction():
 
 
 def get_output(command: str) -> None:
-
     with get_interaction() as interact:
         interact.send("")
         interact.expect(PROMPT)
@@ -163,6 +162,42 @@ def lab_update():
     # usage = f"```\n{usage}\n```"
     post_lab_slack(usage)
 
+
+def pretty_lab_update():
+    qstat = get_output("/usr/sge/bin/linux-x64/qstat  -f | grep BIP")
+    df = pd.read_csv(StringIO(qstat), sep="\s+", names = ['queue', 'bip', 'reserve', 'load', 'os'])
+
+    df['group']= df.queue.str.split("@").str[0]
+    df['reserved_cpus']= df.reserve.str.split("/").str[1]
+    df['equipped_cpus']= df.reserve.str.split("/").str[2]
+
+    msg = ""
+
+    for group in df.group.unique():
+        msg += f"*{group}*"
+
+        subd = df[df.group == group]
+        states=  []
+        load_states = []
+        for _, row in subd.iterrows():
+
+            if row.reserved_cpus == row.equipped_cpus:
+                states.append( ':multi_task:')
+            elif row.reserved_cpus == '0' :
+                states.append( ":idle:")
+            else:
+                states.append( ":tablet:")
+
+            if row.load > float(row.equipped_cpus) - 0.5:
+                load_states.append(":multi_task:")
+            elif row.load < 0.5:
+                load_states.append(":idle:")
+            else:
+                load_states.append(":tablet:")
+        msg += " ".join(states) + " reserved\n"
+        msg += " ".join(load_states) + " actual\n"
+
+    post_lab_slack(msg)
 
 def my_update():
     cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "compute-3-1"]
