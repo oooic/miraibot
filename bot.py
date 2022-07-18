@@ -165,11 +165,15 @@ def lab_update():
 
 def pretty_lab_update():
     qstat = get_output("/usr/sge/bin/linux-x64/qstat  -f | grep BIP")
-    df = pd.read_csv(StringIO(qstat), sep="\s+", names = ['queue', 'bip', 'reserve', 'load', 'os'])
+    df = pd.read_csv(
+        StringIO(qstat),
+        sep="\s+",  # noqa: W605
+        names=["queue", "bip", "reserve", "load", "os"],
+    )
 
-    df['group']= df.queue.str.split("@").str[0]
-    df['reserved_cpus']= df.reserve.str.split("/").str[1]
-    df['equipped_cpus']= df.reserve.str.split("/").str[2]
+    df["group"] = df.queue.str.split("@").str[0]
+    df["reserved_cpus"] = df.reserve.str.split("/").str[1]
+    df["equipped_cpus"] = df.reserve.str.split("/").str[2]
 
     msg = ""
 
@@ -177,16 +181,16 @@ def pretty_lab_update():
         msg += f"*{group}*"
 
         subd = df[df.group == group]
-        states=  []
+        states = []
         load_states = []
         for _, row in subd.iterrows():
 
             if row.reserved_cpus == row.equipped_cpus:
-                states.append( ':multi_task:')
-            elif row.reserved_cpus == '0' :
-                states.append( ":idle:")
+                states.append(":multi_task:")
+            elif row.reserved_cpus == "0":
+                states.append(":idle:")
             else:
-                states.append( ":tablet:")
+                states.append(":tablet:")
 
             if row.load > float(row.equipped_cpus) - 0.5:
                 load_states.append(":multi_task:")
@@ -198,6 +202,7 @@ def pretty_lab_update():
         msg += " ".join(load_states) + " actual\n"
 
     post_lab_slack(msg)
+
 
 def my_update():
     cmd = ["/usr/sge/bin/linux-x64/qstat", "-u", user, "|", "grep", "-v", "compute-3-1"]
