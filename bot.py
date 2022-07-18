@@ -82,9 +82,9 @@ def check_date():
                 output = output.replace("  ", " ")
 
                 if ":" not in output:
-                    output = ":gre-humming:"
+                    output = ":ジョブなし:"
 
-                post_lab_slack(":gre-humming:", DATEN, ":datem:")
+                post_lab_slack(output, DATEN, ":datem:")
 
                 return None
 
@@ -190,7 +190,7 @@ def pretty_lab_update():
             if row.reserved_cpus == row.equipped_cpus:
                 states.append(":全力:")
             elif row.reserved_cpus == "0":
-                states.append(":アイドル:")
+                states.append(":ジョブなし:")
             else:
                 states.append(":余裕:")
 
@@ -199,7 +199,7 @@ def pretty_lab_update():
             elif row.load > float(row.equipped_cpus) - 0.5:
                 load_states.append(":全力:")
             elif row.load < 0.5:
-                load_states.append(":アイドル:")
+                load_states.append(":ジョブなし:")
             else:
                 load_states.append(":余裕:")
         msg += " ".join(states) + " reserved\n"
