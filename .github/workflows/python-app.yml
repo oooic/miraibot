@@ -7,6 +7,7 @@ on:
   schedule:
     - cron: '0,30 * * * *'
   workflow_dispatch:
+  push:
 
 jobs:
   build:
@@ -25,13 +26,13 @@ jobs:
       with:
         path: |
           mirai.txt
-        key: mirai_txt
+        key: mirai_txt-${{ github.sha }}
     - name: Cache txt
       uses: actions/cache@v3
       with:
         path: |
           my_mirai.txt
-        key: my_mirai_txt
+        key: my_mirai_txt-${{ github.sha }}
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
