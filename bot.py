@@ -188,20 +188,20 @@ def pretty_lab_update():
         for _, row in subd.iterrows():
 
             if row.reserved_cpus == row.equipped_cpus:
-                states.append(":multi_task:")
+                states.append(":全力:")
             elif row.reserved_cpus == "0":
-                states.append(":idle:")
+                states.append(":暇:")
             else:
-                states.append(":tablet:")
+                states.append(":余裕:")
 
-            if row.load > float(row.equipped_cpus) + 0.5:
-                load_states.append(":over_load:")
+            if row.load > float(row.equipped_cpus) - 0.5:
+                load_states.append(":オーバーロード:")
             elif row.load > float(row.equipped_cpus) - 0.5:
-                load_states.append(":multi_task:")
+                load_states.append(":全力:")
             elif row.load < 0.5:
-                load_states.append(":idle:")
+                load_states.append(":暇:")
             else:
-                load_states.append(":tablet:")
+                load_states.append(":余裕:")
         msg += " ".join(states) + " reserved\n"
         msg += " ".join(load_states) + " actual\n"
 
