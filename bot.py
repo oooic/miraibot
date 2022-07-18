@@ -144,6 +144,10 @@ def get_output(command: str) -> None:
 
 
 def lab_update():
+    usage = get_output("/usr/sge/bin/linux-x64/qstat -f")
+    # usage = f"```\n{usage}\n```"
+    post_lab_slack(usage)
+
     mirai = get_output("/usr/sge/bin/linux-x64/qstat")
     mirai = f"```\n{mirai}\n```"
     mirai_last = ""
@@ -158,9 +162,7 @@ def lab_update():
         # post_slack(mirai)
         post_lab_slack(mirai)
 
-    usage = get_output("/usr/sge/bin/linux-x64/qstat -f")
-    # usage = f"```\n{usage}\n```"
-    post_lab_slack(usage)
+
 
 
 def pretty_lab_update():
@@ -178,7 +180,7 @@ def pretty_lab_update():
     msg = ""
 
     for group in df.group.unique():
-        msg += f"*{group}*"
+        msg += f"*{group}*\n"
 
         subd = df[df.group == group]
         states = []
@@ -192,7 +194,9 @@ def pretty_lab_update():
             else:
                 states.append(":tablet:")
 
-            if row.load > float(row.equipped_cpus) - 0.5:
+            if row.load > float(row.equipped_cpus) + 0.5:
+                load_states.append(":over_load:")
+            elif row.load > float(row.equipped_cpus) - 0.5:
                 load_states.append(":multi_task:")
             elif row.load < 0.5:
                 load_states.append(":idle:")
@@ -305,8 +309,9 @@ def memory_usage():
 
 def main():
 
-    lab_update()
     memory_usage()
+    lab_update()
+    pretty_lab_update()
     check_date()
 
 
