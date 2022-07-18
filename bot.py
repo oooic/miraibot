@@ -42,7 +42,7 @@ def post_slack(text: str) -> None:
     )
 
 
-def get_output(command: str) -> None:
+def get_interaction():
     proxy = paramiko.ProxyCommand(f"ssh {user}@{host} -p 22 nc {machine} 22")
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy)
@@ -51,9 +51,11 @@ def get_output(command: str) -> None:
     def output(x):
         return None
 
-    with SSHClientInteraction(
-        client, timeout=10, display=True, output_callback=output, tty_width=250
-    ) as interact:
+    return SSHClientInteraction(client, timeout=10, display=True, output_callback=output, tty_width=250)
+
+def get_output(command: str) -> None:
+
+    with get_interaction() as interact:
         interact.send("")
         interact.expect(PROMPT)
 
