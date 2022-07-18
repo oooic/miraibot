@@ -190,16 +190,16 @@ def pretty_lab_update():
             if row.reserved_cpus == row.equipped_cpus:
                 states.append(":全力:")
             elif row.reserved_cpus == "0":
-                states.append(":暇:")
+                states.append(":アイドル:")
             else:
                 states.append(":余裕:")
 
             if row.load > float(row.equipped_cpus) + 0.5:
                 load_states.append(":オーバーロード:")
-            elif row.load > float(row.equipped_cpus) + 0.5:
+            elif row.load > float(row.equipped_cpus) - 0.5:
                 load_states.append(":全力:")
             elif row.load < 0.5:
-                load_states.append(":暇:")
+                load_states.append(":アイドル:")
             else:
                 load_states.append(":余裕:")
         msg += " ".join(states) + " reserved\n"
