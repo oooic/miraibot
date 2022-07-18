@@ -299,9 +299,10 @@ def memory_usage():
 
 
 def main():
-    check_date()
+
     lab_update()
     memory_usage()
+    check_date()
 
 
 if __name__ == "__main__":
