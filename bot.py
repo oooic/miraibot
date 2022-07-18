@@ -195,7 +195,7 @@ def pretty_lab_update():
                 states.append(":余裕:")
 
             if row.load > float(row.equipped_cpus) + 0.5:
-                load_states.append(":オーバーロード:")
+                load_states.append(":cpu利用率超過:")
             elif row.load > float(row.equipped_cpus) - 0.5:
                 load_states.append(":全力:")
             elif row.load < 0.5:
