@@ -164,8 +164,6 @@ def lab_update():
         post_lab_slack(mirai)
 
 
-
-
 def pretty_lab_update():
     qstat = get_output("/usr/sge/bin/linux-x64/qstat  -f | grep BIP")
     df = pd.read_csv(
