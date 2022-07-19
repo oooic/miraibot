@@ -312,7 +312,7 @@ def main():
     try:
         memory_usage()
         res = pretty_lab_update()
-        lab_update(ts=res['ts'])
+        lab_update(ts=res.get('ts', None))
         check_date()
     except paramiko.ssh_exception.SSHException:
         sleep(180)
