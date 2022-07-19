@@ -80,6 +80,7 @@ def check_date():
                 output = output.replace(" R ", " :pi-run: ")
                 output = output.replace(" Q ", " :gre-humming: ")
                 output = output.replace("  ", " ")
+                output = output.replace(f"~ > {DATECMD}", "")
 
                 if ":" not in output:
                     output = ":ジョブなし:"
