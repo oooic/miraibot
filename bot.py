@@ -313,7 +313,7 @@ def main():
         lab_update()
         pretty_lab_update()
         check_date()
-    except paramiko.ssh_exception.SSHException
+    except paramiko.ssh_exception.SSHException:
         sleep(180)
         main()
 
