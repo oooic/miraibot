@@ -164,8 +164,6 @@ def lab_update():
         post_lab_slack(mirai)
 
 
-
-
 def pretty_lab_update():
     qstat = get_output("/usr/sge/bin/linux-x64/qstat  -f | grep BIP")
     df = pd.read_csv(
@@ -310,10 +308,14 @@ def memory_usage():
 
 def main():
 
-    memory_usage()
-    lab_update()
-    pretty_lab_update()
-    check_date()
+    try:
+        memory_usage()
+        lab_update()
+        pretty_lab_update()
+        check_date()
+    except paramiko.ssh_exception.SSHException
+        sleep(180)
+        main()
 
 
 if __name__ == "__main__":
