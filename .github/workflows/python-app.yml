@@ -66,7 +66,6 @@ jobs:
         rm README.md
         today=$(date "+%Y/%m/%d")
         echo ":white_check_mark: ${today}" > README.md
-        # => article_20161031.txt
         git diff
         git config --global user.email "actions@users.noreply.github.com"
         git config --global user.name "README-bot"
