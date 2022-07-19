@@ -308,10 +308,14 @@ def memory_usage():
 
 def main():
 
-    memory_usage()
-    lab_update()
-    pretty_lab_update()
-    check_date()
+    try:
+        memory_usage()
+        lab_update()
+        pretty_lab_update()
+        check_date()
+    except paramiko.ssh_exception.SSHException
+        sleep(180)
+        main()
 
 
 if __name__ == "__main__":
